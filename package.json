@@ -4,7 +4,7 @@
   "description": "SuperTest playground for creating API tests",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --colors",
     "test:watch": "jest --watch"
   },
   "repository": {
