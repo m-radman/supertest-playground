@@ -1,0 +1,36 @@
+{
+  "name": "supertest-playground",
+  "version": "1.0.0",
+  "description": "SuperTest playground for creating API tests",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ivaaaa/supertest-playground.git"
+  },
+  "keywords": [
+    "supertest",
+    "api",
+    "testing",
+    "automation",
+    "js",
+    "node",
+    "functional",
+    "acceptance",
+    "tests",
+    "learning"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ivaaaa/supertest-playground/issues"
+  },
+  "homepage": "https://github.com/ivaaaa/supertest-playground#readme",
+  "devDependencies": {
+    "jest": "^29.3.1",
+    "supertest": "^6.3.3"
+  }
+}
