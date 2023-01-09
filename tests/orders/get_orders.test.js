@@ -30,6 +30,7 @@ describe('GET /orders tests', () => {
     const response = await request(SIMPLE_BOOKS_API_BASE_URL).get('/orders')
       .set('Authorization', `Bearer ${ACCESS_TOKEN}`)
     expect(response.status).toEqual(200)
+    console.log(response.body)
   })
 
   it('should respond with 401 unauthorized request when authorization header is missing', async () => {
