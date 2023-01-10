@@ -5,33 +5,33 @@
       "type": "node",
       "request": "launch",
       "name": "Run All Tests",
-      "program": "${cwd}/node_modules/.bin/jest",
-      "args": ["--colors", "--json", "--outputFile=testresults.json", "--maxConcurrency=5"],
-      "console": "integratedTerminal"
+      "runtimeArgs": ["--inspect-brk", "${workspaceRoot}/node_modules/jest/bin/jest.js", "--runInBand", "--colors", "--json", "--outputFile=testresults.json", "--maxConcurrency=5"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
     },
     {
       "type": "node",
       "request": "launch",
       "name": "Run Current Test",
-      "program": "${cwd}/node_modules/.bin/jest",
-      "args": ["${fileBasename}"],
-      "console": "integratedTerminal"
+      "runtimeArgs": ["--inspect-brk", "${workspaceRoot}/node_modules/jest/bin/jest.js", "${fileBasename}", "--runInBand"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
     },
     {
       "type": "node",
       "request": "launch",
       "name": "Run One Test",
-      "program": "${cwd}/node_modules/.bin/jest",
-      "args": ["get_order.test.js"],
-      "console": "integratedTerminal"
+      "runtimeArgs": ["--inspect-brk", "${workspaceRoot}/node_modules/jest/bin/jest.js", "get_order.test.js", "--runInBand"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
     },
     {
       "type": "node",
       "request": "launch",
       "name": "Run Orders Tests",
-      "program": "${cwd}/node_modules/.bin/jest",
-      "args": ["tests/orders/"],
-      "console": "integratedTerminal"
+      "runtimeArgs": ["--inspect-brk", "${workspaceRoot}/node_modules/jest/bin/jest.js", "tests/orders/", "--runInBand"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
     }
   ]
 }
