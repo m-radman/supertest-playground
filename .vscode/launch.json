@@ -1,0 +1,37 @@
+{
+  "version": "1.0.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run All Tests",
+      "program": "${cwd}/node_modules/.bin/jest",
+      "args": ["--colors", "--json", "--outputFile=testresults.json", "--maxConcurrency=5"],
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run Current Test",
+      "program": "${cwd}/node_modules/.bin/jest",
+      "args": ["${fileBasename}"],
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run One Test",
+      "program": "${cwd}/node_modules/.bin/jest",
+      "args": ["get_order.test.js"],
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run Orders Tests",
+      "program": "${cwd}/node_modules/.bin/jest",
+      "args": ["tests/orders/"],
+      "console": "integratedTerminal"
+    }
+  ]
+}
