@@ -1,3 +1,5 @@
+const crypto = require("crypto")
+
 const request = require("supertest")
 const utils = require("../../auth/utils")
 const constants = require("../../auth/constants")
