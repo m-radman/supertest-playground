@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --colors",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "test1": "jest --colors --json --outputFile=testresults.json --maxConcurrency=1",
+    "test2": "jest books",
+    "test3": "jest tests/books/get_single_book.test.js",
+    "test4": "jest get_single_book.test.js"
   },
   "repository": {
     "type": "git",

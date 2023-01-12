@@ -16,3 +16,6 @@ Install npm dependencies
 Run tests for Simple Books API 
 > `npm run test`
 
+### Visual Studio Code Integration 
+
+Install [Jest](https://marketplace.visualstudio.com/items?itemName=Orta.vscode-jest) Extension from vscode. 
