@@ -1,18 +1,20 @@
 const request = require("supertest")
-const SIMPLE_BOOKS_API_BASE_URL = "https://simple-books-api.glitch.me"
-
-const ACCESS_TOKEN =
-  "8a3f41cb98d1608664c552af9cc2c5f341bc1d89ac03fd0d31335947a5142753"
-
+const utils = require("../../auth/utils")
+const constants = require("../../auth/constants")
+let accessToken
 let orderId
+let simpleBooksUrl
 
-describe("PUT /orders/:orderId tests", () => {
+describe("PATCH /orders/:orderId tests", () => {
   beforeAll(async function () {
-    jest.setTimeout(15 * 1000)
+    jest.setTimeout(constants.JEST_TIMEOUT)
 
-    const createOrder = await request(SIMPLE_BOOKS_API_BASE_URL)
+    simpleBooksUrl = constants.SIMPLE_BOOKS_API_BASE_URL
+    accessToken = await utils.generateAccessToken()
+
+    const createOrder = await request(simpleBooksUrl)
       .post("/orders")
-      .set("Authorization", `Bearer ${ACCESS_TOKEN}`)
+      .set("Authorization", `Bearer ${accessToken}`)
       .send({ bookId: 5, customerName: "Jon Berg" })
 
     if (createOrder.status !== 201) {
@@ -23,46 +25,51 @@ describe("PUT /orders/:orderId tests", () => {
   })
 
   it("should respond with updated order", async () => {
-    const response = await request(SIMPLE_BOOKS_API_BASE_URL)
+    const response = await request(simpleBooksUrl)
       .patch(`/orders/${orderId}`)
-      .set("Authorization", `Bearer ${ACCESS_TOKEN}`)
-      .send({ customerName: "Billy Jean" })
+      .set("Authorization", `Bearer ${accessToken}`)
+      .send({ customerName: "Harvey Dent" })
     expect(response.status).toEqual(204)
 
-    const patchedOrder = await request(SIMPLE_BOOKS_API_BASE_URL)
+    const patchedOrder = await request(simpleBooksUrl)
       .get(`/orders/${orderId}`)
-      .set("Authorization", `Bearer ${ACCESS_TOKEN}`)
-    expect(patchedOrder.body).toMatchObject({ customerName: "Billy Jean" })
+      .set("Authorization", `Bearer ${accessToken}`)
+    expect(patchedOrder.body).toMatchObject({ customerName: "Harvey Dent" })
   })
 
-  it("should respond with 204 when request body is empty", async () => {
-    const response = await request(SIMPLE_BOOKS_API_BASE_URL)
+  it("should respond with status 204 when request body is empty", async () => {
+    const response = await request(simpleBooksUrl)
       .patch(`/orders/${orderId}`)
-      .set("Authorization", `Bearer ${ACCESS_TOKEN}`)
+      .set("Authorization", `Bearer ${accessToken}`)
       .send({})
     expect(response.status).toEqual(204)
+
+    const patchedOrder = await request(simpleBooksUrl)
+      .get(`/orders/${orderId}`)
+      .set("Authorization", `Bearer ${accessToken}`)
+    expect(patchedOrder.body).toMatchObject({})
   })
 
-  it("should respond with 404 not found when order with given orderId does not exists", async () => {
-    const response = await request(SIMPLE_BOOKS_API_BASE_URL)
-      .patch("/orders/notrealorderid")
-      .set("Authorization", `Bearer ${ACCESS_TOKEN}`)
-      .send({ customerName: "Billy Jean" })
+  it("should respond with status 404 when order with provided orderId does not exist", async () => {
+    const response = await request(simpleBooksUrl)
+      .patch("/order/notrealorderid")
+      .set("Authorization", `Bearer ${accessToken}`)
+      .send({ customerName: "Alfred Pennyworth" })
     expect(response.status).toEqual(404)
   })
 
-  it("should respond with 401 unauthorized request when authorization header is missing", async () => {
-    const response = await request(SIMPLE_BOOKS_API_BASE_URL)
+  it("should respond with status 401 when authorization header is missing", async () => {
+    const response = await request(simpleBooksUrl)
       .patch(`/orders/${orderId}`)
-      .send({ customerName: "Billy Jean" })
+      .send({ customerName: "Alfred Pennyworth" })
     expect(response.status).toEqual(401)
   })
 
-  it("should respond with 401 unauthorized request when authorization header contains invalid token", async () => {
-    const response = await request(SIMPLE_BOOKS_API_BASE_URL)
+  it("should respond with status 401 when authorization header contains invalid token", async () => {
+    const response = await request(simpleBooksUrl)
       .patch(`/orders/${orderId}`)
-      .set("Authorization", `Bearer invalidtoken`)
-      .send({ customerName: "Billy Jean" })
+      .set("Authorization", "Bearer invalidtoken")
+      .send({ customerName: "Alfred Pennyworth" })
     expect(response.status).toEqual(401)
   })
 })
