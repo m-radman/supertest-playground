@@ -6,9 +6,9 @@ let simpleBooksUrl
 
 describe("POST /orders tests", () => {
   beforeAll(async function () {
-    jest.setTimeout(await constants.JEST_TIMEOUT)
+    jest.setTimeout(constants.JEST_TIMEOUT)
 
-    simpleBooksUrl = await constants.SIMPLE_BOOKS_API_BASE_URL
+    simpleBooksUrl = constants.SIMPLE_BOOKS_API_BASE_URL
     accessToken = await utils.generateAccessToken()
   })
 
