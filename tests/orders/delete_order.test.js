@@ -1,16 +1,18 @@
 const request = require("supertest")
-const ACCESS_TOKEN = require("../../auth/generateAccessToken")
-const SIMPLE_BOOKS_API_BASE_URL = "https://simple-books-api.glitch.me"
+const utils = require("../../auth/utils")
+const constants = require("../../auth/constants")
 let accessToken
 let orderId
+let simpleBooksUrl
 
 describe("DELETE /orders/:orderId tests", () => {
   beforeAll(async function () {
-    jest.setTimeout(15 * 1000)
+    jest.setTimeout(await constants.JEST_TIMEOUT)
 
-    accessToken = await ACCESS_TOKEN.generateAccessToken()
+    simpleBooksUrl = await constants.SIMPLE_BOOKS_API_BASE_URL
+    accessToken = await utils.generateAccessToken()
 
-    const createOrder = await request(SIMPLE_BOOKS_API_BASE_URL)
+    const createOrder = await request(simpleBooksUrl)
       .post("/orders")
       .set("Authorization", `Bearer ${accessToken}`)
       .send({ bookId: 5, customerName: "Jon Berg" })
@@ -23,33 +25,31 @@ describe("DELETE /orders/:orderId tests", () => {
   })
 
   it("should delete an order and respond with status 204", async () => {
-    const response = await request(SIMPLE_BOOKS_API_BASE_URL)
+    const response = await request(simpleBooksUrl)
       .delete(`/orders/${orderId}`)
       .set("Authorization", `Bearer ${accessToken}`)
     expect(response.status).toEqual(204)
 
-    const checkOrder = await request(SIMPLE_BOOKS_API_BASE_URL)
+    const checkOrder = await request(simpleBooksUrl)
       .get(`/orders/${orderId}`)
       .set("Authorization", `Bearer ${accessToken}`)
     expect(checkOrder.status).toEqual(404)
   })
 
   it("should respond with status 404 when order with provided orderId does not exist", async () => {
-    const response = await request(SIMPLE_BOOKS_API_BASE_URL)
-      .delete("/order/notrealorderid")
+    const response = await request(simpleBooksUrl)
+      .delete("/orders/notrealorderid")
       .set("Authorization", `Bearer ${accessToken}`)
     expect(response.status).toEqual(404)
   })
 
   it("should respond with status 401 when authorization header is missing", async () => {
-    const response = await request(SIMPLE_BOOKS_API_BASE_URL).delete(
-      `/orders/${orderId}`
-    )
+    const response = await request(simpleBooksUrl).delete(`/orders/${orderId}`)
     expect(response.status).toEqual(401)
   })
 
   it("should respond with status 401 when authorization header contains invalid token", async () => {
-    const response = await request(SIMPLE_BOOKS_API_BASE_URL)
+    const response = await request(simpleBooksUrl)
       .delete(`/orders/${orderId}`)
       .set("Authorization", "Bearer invalidtoken")
     expect(response.status).toEqual(401)

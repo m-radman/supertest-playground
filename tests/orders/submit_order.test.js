@@ -1,17 +1,19 @@
 const request = require("supertest")
-const ACCESS_TOKEN = require("../../auth/generateAccessToken")
-const SIMPLE_BOOKS_API_BASE_URL = "https://simple-books-api.glitch.me"
+const utils = require("../../auth/utils")
+const constants = require("../../auth/constants")
 let accessToken
+let simpleBooksUrl
 
 describe("POST /orders tests", () => {
   beforeAll(async function () {
-    jest.setTimeout(15 * 1000)
+    jest.setTimeout(await constants.JEST_TIMEOUT)
 
-    accessToken = await ACCESS_TOKEN.generateAccessToken()
+    simpleBooksUrl = await constants.SIMPLE_BOOKS_API_BASE_URL
+    accessToken = await utils.generateAccessToken()
   })
 
   it("should respond with created order", async () => {
-    const response = await request(SIMPLE_BOOKS_API_BASE_URL)
+    const response = await request(simpleBooksUrl)
       .post("/orders")
       .set("Authorization", `Bearer ${accessToken}`)
       .send({
@@ -22,7 +24,7 @@ describe("POST /orders tests", () => {
   })
 
   it("should respod with status 400 when request body is missing bookId", async () => {
-    const response = await request(SIMPLE_BOOKS_API_BASE_URL)
+    const response = await request(simpleBooksUrl)
       .post("/orders")
       .set("Authorization", `Bearer ${accessToken}`)
       .send({ customerName: "Doc Watson" })
@@ -31,13 +33,13 @@ describe("POST /orders tests", () => {
   })
 
   it("should respond with 201 when request body is missing customerName", async () => {
-    const response = await request(SIMPLE_BOOKS_API_BASE_URL)
+    const response = await request(simpleBooksUrl)
       .post("/orders")
       .set("Authorization", `Bearer ${accessToken}`)
       .send({ bookId: 1 })
     expect(response.status).toEqual(201)
 
-    const newOrder = await request(SIMPLE_BOOKS_API_BASE_URL)
+    const newOrder = await request(simpleBooksUrl)
       .get(`/orders/${response.body.orderId}`)
       .set("Authorization", `Bearer ${accessToken}`)
     expect(newOrder.status).toEqual(200)
@@ -45,17 +47,15 @@ describe("POST /orders tests", () => {
   })
 
   it("should respond with status 401 when authorization header is missing", async () => {
-    const response = await request(SIMPLE_BOOKS_API_BASE_URL)
-      .post("/orders")
-      .send({
-        bookId: 5,
-        customerName: "Billy Jean",
-      })
+    const response = await request(simpleBooksUrl).post("/orders").send({
+      bookId: 5,
+      customerName: "Billy Jean",
+    })
     expect(response.status).toEqual(401)
   })
 
   it("should respond with status 401 when authorization header contains invalid access token", async () => {
-    const response = await request(SIMPLE_BOOKS_API_BASE_URL)
+    const response = await request(simpleBooksUrl)
       .post("/orders")
       .set("Authorization", "Bearer invalidtoken")
       .send({
